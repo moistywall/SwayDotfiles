@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+
+PIDFILE="$HOME/.cache/info-panel.pid"
+
+# すでに表示中なら閉じる
+if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+  kill "$(cat "$PIDFILE")"
+  rm -f "$PIDFILE"
+  exit 0
+fi
+
+# 古いPIDファイルが残っていたら消す
+rm -f "$PIDFILE"
+
+xfce4-terminal \
+  --title=info-panel-fixed \
+  --hide-menubar \
+  --hide-toolbar \
+  --geometry=56x10 \
+  --command="bash -lc '
+    echo \$\$ > \"$HOME/.cache/info-panel.pid\"
+    trap \"rm -f $HOME/.cache/info-panel.pid\" EXIT
+
+    tput civis
+    clear
+    
+    while true; do
+      printf \"\033[H\"
+      /home/akasabi/.local/bin/info-panel
+      sleep 2
+    done
+  '"
+

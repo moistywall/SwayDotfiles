@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+PIDFILE="$HOME/.cache/music-mpv.pid"
+SOCK="$HOME/.cache/mpv-music.sock"
+
+if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+	kill "$(cat "$PIDFILE")"
+	rm -f "$PIDFILE" "$SOCK"
+	echo "music stopped"
+	exit 0
+fi
+
+# in case of PIDFILE
+pkill -f "mpv.*$SOCK" 2>/dev/null && echo "music stopped" || "no music palying"
+rm -f "$PIDFILE" "$SOCK"

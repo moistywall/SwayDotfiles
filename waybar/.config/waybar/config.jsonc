@@ -1,0 +1,59 @@
+{
+    "layer": "top",
+    "position": "bottom", // 画面下部に配置
+    "height": 26,
+    "spacing": 15,
+
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode"
+    ],
+    "modules-center": [
+        "sway/window"
+    ],
+    "modules-right": [
+        "pulseaudio",
+        "network",
+        "battery",
+        "clock#date",
+        "clock#time",
+        "tray"
+    ],
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": false, // 2画面環境で、その画面にあるワークスペースだけをクリーンに表示
+        "format": "{name}"
+    },
+
+    "sway/mode": {
+        "format": "[{}]"
+    },
+
+    "sway/window": {
+        "max-length": 50
+    },
+
+    "clock#date": {
+        "format": "{:%Y-%m-%d}"
+    },
+
+    "clock#time": {
+        "format": "{:%H:%M}"
+    },
+
+    "battery": {
+        "format": "BAT {capacity}%"
+    },
+
+    "network": {
+        "format-wifi": "WIFI",
+        "format-ethernet": "ETH",
+        "format-disconnected": "DISCONNECT"
+    },
+
+    "pulseaudio": {
+        "format": "VOL {volume}%",
+        "format-muted": "MUTED"
+    }
+}

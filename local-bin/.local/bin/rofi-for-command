@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+
+CONTAINER="kali-lab"
+
+# --------------------------------------------------
+# rofi本体の起動
+# --------------------------------------------------
+if [[ -z "${ROFI_RETV+x}" ]]; then
+    exec rofi \
+        -show command \
+        -modes "command:$0" \
+        -kb-accept-entry "" \
+        -kb-accept-custom "Return" \
+        -kb-custom-1 "Control+Return" \
+        -theme-str '
+            window {
+                width: 60%;
+            }
+
+            listview {
+                lines: 12;
+                fixed-height: false;
+                dynamic: true;
+                scrollbar: true;
+            }
+        '
+fi
+
+
+# --------------------------------------------------
+# rofiヘッダー
+# --------------------------------------------------
+print_header() {
+    printf '\0prompt\x1fKali > \n'
+    printf '\0no-custom\x1ffalse\n'
+    printf '\0use-hot-keys\x1ftrue\n'
+}
+
+
+# --------------------------------------------------
+# 出力行
+# --------------------------------------------------
+print_output_line() {
+    local line="$1"
+
+    # 空行も表示する
+    [[ -z "$line" ]] && line=" "
+
+    printf '%s\0nonselectable\x1ftrue\x1fpermanent\x1ftrue\n' "$line"
+}
+
+
+# --------------------------------------------------
+# 入力されているコマンドを取得
+# --------------------------------------------------
+get_command() {
+    if [[ -n "${ROFI_INPUT:-}" ]]; then
+        printf '%s' "$ROFI_INPUT"
+    else
+        printf '%s' "${1:-}"
+    fi
+}
+
+
+case "${ROFI_RETV:-0}" in
+
+    # --------------------------------------------------
+    # 初回起動
+    # --------------------------------------------------
+    0)
+        print_header
+        printf '\0message\x1fEnter: run in Kali / Ctrl+Enter: open in Alacritty\n'
+
+        # エントリ0件だとrofiが終了するためダミー
+        print_output_line " "
+        ;;
+
+
+    # --------------------------------------------------
+    # Enter
+    # Kaliコンテナ内で実行し、rofiに結果を表示
+    # --------------------------------------------------
+    2)
+        command="$(get_command "$@")"
+
+        print_header
+
+        if [[ -z "${command//[[:space:]]/}" ]]; then
+            printf '\0message\x1fEnter a command\n'
+            print_output_line " "
+            exit 0
+        fi
+
+        output="$(
+            distrobox enter \
+                --name "$CONTAINER" \
+                --no-tty \
+                -- \
+                bash -lc "$command" \
+                2>&1
+        )"
+
+        status=$?
+
+        printf '\0message\x1fexit: %d  |  %s\n' "$status" "$command"
+
+        if [[ -n "$output" ]]; then
+            while IFS= read -r line || [[ -n "$line" ]]; do
+                print_output_line "$line"
+            done <<< "$output"
+        else
+            print_output_line "(no output)"
+        fi
+        ;;
+
+
+    # --------------------------------------------------
+    # Ctrl+Enter
+    # Alacrittyを開き、その中でKaliコンテナ上のコマンドを実行
+    #
+    # ROFI_RETV=10 -> kb-custom-1
+    # --------------------------------------------------
+    10)
+        command="$(get_command "$@")"
+
+        if [[ -z "${command//[[:space:]]/}" ]]; then
+            print_header
+            printf '\0message\x1fEnter a command\n'
+            print_output_line " "
+            exit 0
+        fi
+
+        # rofiをブロックしないよう別プロセスで起動
+        coproc (
+            alacritty \
+                -e \
+                distrobox enter \
+                --name "$CONTAINER" \
+                -- \
+                bash -lc "$command; exec bash" \
+                >/dev/null 2>&1
+        )
+
+        exit 0
+        ;;
+
+esac

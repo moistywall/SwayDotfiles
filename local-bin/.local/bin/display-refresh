@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+### i3バージョン ###
+# モニター認識とか
+# xrandr --auto
+
+# 配置換え（右HDMI、左DP の場合）
+# xrandr --output DP-1 --auto --output HDMI-0 --auto --right-of DP-0
+
+# 配置換え（両方DP）
+# xrandr --output DP-2 --auto --output DP-0 --auto --right-of DP-2
+
+# if [ -x "$HOME/.fehbg" ]; then
+# 	"$HOME/.fehbg"
+# fi
+
+### sway バージョン ###
+swaymsg 'output DP-2 enable position 0 0'
+swaymsg 'output DP-1 enable position 1920 0'
+

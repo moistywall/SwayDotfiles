@@ -1,0 +1,36 @@
+* {
+    font-family: GeistMono Nerd Font;
+    font-size: 12px;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background-color: #B13546;
+    color: #ffffff;
+    border-top: 1px solid #333333;
+}
+
+/* ワークスペースボタン */
+#workspaces button {
+    padding: 0 8px;
+    background-color: transparent;
+    color: #888888;
+}
+
+/* 今見ている（アクティブな）ワークスペース */
+#workspaces button.focused {
+    color: #ffffff;
+    background-color: #2f527a; /* Fedoraブルー風のアクセント */
+}
+
+/* 通知や緊急のあるワークスペース */
+#workspaces button.urgent {
+    color: #ffffff;
+    background-color: #a83232;
+}
+
+/* 各モジュールの余白調整 */
+#mode, #clock, #battery, #network, #pulseaudio, #tray {
+    padding: 0 5px;
+}

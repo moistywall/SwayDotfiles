@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+SOCK="$HOME/.cache/mpv-music.sock"
+
+if [ ! -S "$SOCK" ]; then
+	exit 0
+fi
+
+printf '{ "command": ["cycle", "pause"] }\n' | socat - "$SOCK" >/dev/null 2>&1
+

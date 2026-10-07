@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+terminal="xfce4-terminal"
+
+$terminal \
+  --title info-popup \
+  --hide-menubar \
+  --hide-toolbar \
+  --geometry=50x8 \
+  -e "bash -c '~/.local/bin/info-panel; sleep 3'" &
+

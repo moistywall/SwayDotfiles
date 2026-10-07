@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+MUSIC_DIR="${1:-$HOME/Music}"
+PIDFILE="$HOME/.cache/music-mpv.pid"
+SOCK="$HOME/.cache/mpv-music.sock"
+
+mkdir -p "$HOME/.cache"
+
+if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+	echo "music already playing: pid $(cat "$PIDFILE")"
+	exit 0
+fi
+
+rm -f "$SOCK"
+
+mapfile -d '' FILES < <(
+  find "$MUSIC_DIR" -type f \
+    \( -iname '*.mp3' -o -iname '*.m4a' -o -iname '*.flac' -o -iname '*.wav' -o -iname '*.ogg' -o -iname '*.opus' \) \
+    -print0 \
+    | shuf -z
+)
+
+if [ "${#FILES[@]}" -eq 0 ]; then
+  echo "no music files found: $MUSIC_DIR"
+  exit 1
+fi
+
+mpv \
+	--no-video \
+	--really-quiet \
+	--input-ipc-server="$SOCK" \
+	--replaygain=track \
+	--replaygain-preamp=0 \
+	"${FILES[@]}" >/dev/null 2>&1 &
+
+echo $! > "$PIDFILE"
+echo "music started: pid $!"
+

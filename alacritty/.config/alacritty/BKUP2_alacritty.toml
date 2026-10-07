@@ -1,0 +1,62 @@
+[window]
+padding = { x = 8, y = 8 }
+dynamic_padding = true
+opacity = 1.0
+
+[font]
+size = 11.0
+
+[font.normal]
+family = "monospace"
+style = "Regular"
+
+[font.bold]
+family = "monospace"
+style = "Bold"
+
+[font.italic]
+family = "monospace"
+style = "Italic"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+unfocused_hollow = true
+
+[selection]
+save_to_clipboard = true
+
+[colors.primary]
+background = "#eef6f7"
+foreground = "#3f3434"
+
+[colors.cursor]
+text = "#eef6f7"
+cursor = "#d94a4a"
+
+[colors.selection]
+text = "#3c3638"
+background = "#f1cfcf"
+
+[colors.normal]
+black = "#3c3638"
+red = "#d94a4a"
+green = "#688f75"
+yellow = "#aa843f"
+blue = "#5d8da3"
+magenta = "#a85b78"
+cyan = "#5f999f"
+white = "#eef6f7"
+
+[colors.bright]
+black = "#6c6365"
+red = "#e85a5a"
+green = "#79a987"
+yellow = "#c1974f"
+blue = "#72a8c0"
+magenta = "#bf718c"
+cyan = "#75b1b8"
+white = "#fbffff"

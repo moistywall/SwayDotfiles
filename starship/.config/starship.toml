@@ -1,0 +1,75 @@
+# ~/.config/starship.toml
+
+add_newline = false
+scan_timeout = 10
+command_timeout = 500
+
+format = """
+$container\
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$cmd_duration\
+$line_break\
+$character"""
+
+# right_format = """
+# $time\
+# """
+
+[container]
+symbol="⬢ "
+style = "bold red"
+format = "[$symbol$name]($style) "
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "bold white"
+
+[git_branch]
+symbol = " "
+style = "bold purple"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "bold red"
+format = "[$all_status$ahead_behind]($style) "
+
+[python]
+symbol = "py "
+format = "[$symbol$version]($style) "
+style = "yellow"
+
+[nodejs]
+symbol = "node "
+format = "[$symbol$version]($style) "
+style = "green"
+
+[rust]
+symbol = "rs "
+format = "[$symbol$version]($style) "
+style = "red"
+
+[golang]
+symbol = "go "
+format = "[$symbol$version]($style) "
+style = "cyan"
+
+[cmd_duration]
+min_time = 1000
+format = "took [$duration](bold yellow) "
+
+[character]
+success_symbol = "[❯](bold white)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold blue)"
+
+# [time]
+# disabled = false
+# format = "[$time]($style)"
+# time_format = "%R"
+# utc_time_offset = "local"
+# style = "bright-red"

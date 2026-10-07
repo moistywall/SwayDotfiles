@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+list_streams() {
+  pactl list sink-inputs | awk '
+    function emit() {
+      if (id != "") {
+        if (app == "") app = media
+        if (app == "") app = binary
+        if (app == "") app = node
+        if (app == "") app = "unknown"
+
+        if (volume == "") volume = "unknown"
+
+        print id " | " app " | " volume
+      }
+    }
+
+    /^Sink Input #/ {
+      emit()
+
+      id=$3
+      sub("#", "", id)
+
+      app=""
+      media=""
+      binary=""
+      node=""
+      volume=""
+      next
+    }
+
+    /application.name =/ {
+      app=$0
+      sub(/^.*application.name = "/, "", app)
+      sub(/"$/, "", app)
+      next
+    }
+
+    /media.name =/ {
+      media=$0
+      sub(/^.*media.name = "/, "", media)
+      sub(/"$/, "", media)
+      next
+    }
+
+    /application.process.binary =/ {
+      binary=$0
+      sub(/^.*application.process.binary = "/, "", binary)
+      sub(/"$/, "", binary)
+      next
+    }
+
+    /node.name =/ {
+      node=$0
+      sub(/^.*node.name = "/, "", node)
+      sub(/"$/, "", node)
+      next
+    }
+
+    /Volume:/ && volume == "" {
+      if (match($0, /[0-9]+%/)) {
+        volume=substr($0, RSTART, RLENGTH)
+      }
+      next
+    }
+
+    END {
+      emit()
+    }
+  '
+}
+
+stream="$(
+  list_streams | rofi -dmenu -i -p "App volume"
+)"
+
+[ -z "$stream" ] && exit 0
+
+id="$(printf '%s\n' "$stream" | awk -F' \\| ' '{print $1}')"
+app="$(printf '%s\n' "$stream" | awk -F' \\| ' '{print $2}')"
+
+vol="$(
+  printf '10%%\n20%%\n30%%\n40%%\n50%%\n60%%\n70%%\n80%%\n90%%\n100%%\nMute toggle\n' \
+    | rofi -dmenu -i -p "$app"
+)"
+
+case "$vol" in
+  *%)
+    pactl set-sink-input-mute "$id" 0
+    pactl set-sink-input-volume "$id" "$vol"
+    ;;
+  "Mute toggle")
+    pactl set-sink-input-mute "$id" toggle
+    ;;
+esac

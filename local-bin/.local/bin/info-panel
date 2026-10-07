@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+song="$(mpv-current 2>/dev/null)"
+volume="$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | sed 's/Volume: //')"
+ram="$(free -h | awk '/Mem:/ {print $3 "/" $2}')"
+disk="$(df -h / | awk 'NR==2 {print $4 " free"}')"
+
+echo
+if [ -n "$song" ]; then
+  echo "♪ $song"
+else
+  echo "♪ not palying"
+fi
+echo
+echo "Vol: $volume"
+echo "Time: $(date '+%H:%M')"
+echo "Date: $(date '+%Y-%m-%d')"
+echo "RAM: $ram"
+echo "Disk: $disk"
+echo
+

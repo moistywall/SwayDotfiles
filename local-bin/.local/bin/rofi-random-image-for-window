@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+IMAGE_DIR="$HOME/Pictures/rofi-icons"
+CACHE_DIR="$HOME/.cache/rofi"
+THEME_FILE="$CACHE_DIR/random-image.rasi"
+
+mkdir -p "$CACHE_DIR"
+
+IMG="$(
+  find "$IMAGE_DIR" -type f \
+    \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) \
+    | shuf -n 1
+)"
+
+if [ -z "$IMG" ]; then
+  rofi -show winodw
+  exit 0
+fi
+
+cat > "$THEME_FILE" <<EOF
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    font: "monospace 11";
+    drun-display-format: "{name}";
+}
+
+* {
+    bg: #1f1f28;
+    fg: #d8d3c8;
+    accent: #c4746e;
+    border: #54546d;
+
+    background-color: @bg;
+    text-color: @fg;
+}
+
+window {
+    width: 735px;
+    border: 1px;
+    border-color: @border;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+mainbox {
+    orientation: horizontal;
+    spacing: 12px;
+    children: [ "leftbox", "imagebox" ];
+}
+
+leftbox {
+    orientation: vertical;
+    spacing: 8px;
+    children: [ "inputbar", "listview" ];
+}
+
+inputbar {
+    padding: 6px;
+    border: 0 0 1px 0;
+    border-color: @border;
+}
+
+entry {
+    placeholder: "Search apps...";
+    placeholder-color: #8a8a8a;
+}
+
+listview {
+    lines: 8;
+    columns: 1;
+    spacing: 3px;
+    fixed-height: true;
+}
+
+element {
+    padding: 4px 6px;
+    border-radius: 6px;
+}
+
+element selected {
+    background-color: @accent;
+    text-color: #16161d;
+}
+
+element-icon {
+    size: 24px;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
+
+imagebox {
+    width: 220px;
+    height: 220px;
+    border-radius: 8px;
+    background-image: url("$IMG", none);
+}
+EOF
+
+rofi -show window -theme "$THEME_FILE"
