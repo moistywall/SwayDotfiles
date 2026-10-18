@@ -2,13 +2,43 @@
 
 CONTAINER="kali-lab"
 
-# --------------------------------------------------
-# rofi本体の起動
-# --------------------------------------------------
+SCRIPT_DIR="$HOME/.local/bin"
+KALI_SCRIPT="$SCRIPT_DIR/rofi-command-kali"
+FEDORA_SCRIPT="$SCRIPT_DIR/rofi-command-fedora"
+
+
+# ==================================================
+# 実行対象を判定
+# ==================================================
+
+case "$(basename "$0")" in
+    rofi-command-kali)
+        TARGET="kali"
+        TARGET_NAME="Kali"
+        ;;
+
+    rofi-command-fedora)
+        TARGET="fedora"
+        TARGET_NAME="Fedora"
+        ;;
+
+    *)
+        TARGET=""
+        ;;
+esac
+
+
+# ==================================================
+# rofi本体を起動
+# ==================================================
+
+# Swayなどから rofi-command を直接呼んだ場合
 if [[ -z "${ROFI_RETV+x}" ]]; then
+
     exec rofi \
-        -show command \
-        -modes "command:$0" \
+        -show Kali \
+        -modes "Kali:$KALI_SCRIPT,Fedora:$FEDORA_SCRIPT" \
+        -sidebar-mode \
         -kb-accept-entry "" \
         -kb-accept-custom "Return" \
         -kb-custom-1 "Control+Return" \
@@ -27,32 +57,26 @@ if [[ -z "${ROFI_RETV+x}" ]]; then
 fi
 
 
-# --------------------------------------------------
-# rofiヘッダー
-# --------------------------------------------------
+# ==================================================
+# 共通処理
+# ==================================================
+
 print_header() {
-    printf '\0prompt\x1fKali > \n'
+    printf '\0prompt\x1f%s > \n' "$TARGET_NAME"
     printf '\0no-custom\x1ffalse\n'
     printf '\0use-hot-keys\x1ftrue\n'
 }
 
 
-# --------------------------------------------------
-# 出力行
-# --------------------------------------------------
 print_output_line() {
     local line="$1"
 
-    # 空行も表示する
     [[ -z "$line" ]] && line=" "
 
     printf '%s\0nonselectable\x1ftrue\x1fpermanent\x1ftrue\n' "$line"
 }
 
 
-# --------------------------------------------------
-# 入力されているコマンドを取得
-# --------------------------------------------------
 get_command() {
     if [[ -n "${ROFI_INPUT:-}" ]]; then
         printf '%s' "$ROFI_INPUT"
@@ -62,24 +86,32 @@ get_command() {
 }
 
 
+# ==================================================
+# rofiから呼ばれたとき
+# ==================================================
+
 case "${ROFI_RETV:-0}" in
 
-    # --------------------------------------------------
-    # 初回起動
-    # --------------------------------------------------
+    # ----------------------------------------------
+    # 初回表示
+    # ----------------------------------------------
     0)
         print_header
-        printf '\0message\x1fEnter: run in Kali / Ctrl+Enter: open in Alacritty\n'
 
-        # エントリ0件だとrofiが終了するためダミー
+        if [[ "$TARGET" == "kali" ]]; then
+            printf '\0message\x1fKali: %s  |  Enter: run  |  Ctrl+Enter: Alacritty\n' "$CONTAINER"
+        else
+            printf '\0message\x1fFedora host  |  Enter: run  |  Ctrl+Enter: Alacritty\n'
+        fi
+
+        # エントリ0件でrofiが終了しないようにする
         print_output_line " "
         ;;
 
 
-    # --------------------------------------------------
+    # ----------------------------------------------
     # Enter
-    # Kaliコンテナ内で実行し、rofiに結果を表示
-    # --------------------------------------------------
+    # ----------------------------------------------
     2)
         command="$(get_command "$@")"
 
@@ -91,35 +123,62 @@ case "${ROFI_RETV:-0}" in
             exit 0
         fi
 
-        output="$(
-            distrobox enter \
-                --name "$CONTAINER" \
-                --no-tty \
-                -- \
-                bash -lc "$command" \
+
+        # --------------------------
+        # Kali Distrobox
+        # --------------------------
+        if [[ "$TARGET" == "kali" ]]; then
+
+            output="$(
+                distrobox enter \
+                    --name "$CONTAINER" \
+                    --no-tty \
+                    -- \
+                    bash -lc "cd ~ && $command" \
+                    2>&1
+            )"
+
+            status=$?
+
+
+        # --------------------------
+        # Fedora host
+        # --------------------------
+        else
+
+            output="$(
+                bash -lc "cd ~ && $command" \
                 2>&1
-        )"
+            )"
 
-        status=$?
+            status=$?
 
-        printf '\0message\x1fexit: %d  |  %s\n' "$status" "$command"
+        fi
+
+
+        printf '\0message\x1f%s  |  exit: %d  |  %s\n' \
+            "$TARGET_NAME" \
+            "$status" \
+            "$command"
+
 
         if [[ -n "$output" ]]; then
+
             while IFS= read -r line || [[ -n "$line" ]]; do
                 print_output_line "$line"
             done <<< "$output"
+
         else
             print_output_line "(no output)"
         fi
         ;;
 
 
-    # --------------------------------------------------
+    # ----------------------------------------------
     # Ctrl+Enter
-    # Alacrittyを開き、その中でKaliコンテナ上のコマンドを実行
     #
-    # ROFI_RETV=10 -> kb-custom-1
-    # --------------------------------------------------
+    # 対話コマンドなどをAlacrittyへ逃がす
+    # ----------------------------------------------
     10)
         command="$(get_command "$@")"
 
@@ -130,16 +189,32 @@ case "${ROFI_RETV:-0}" in
             exit 0
         fi
 
-        # rofiをブロックしないよう別プロセスで起動
-        coproc (
-            alacritty \
-                -e \
-                distrobox enter \
-                --name "$CONTAINER" \
-                -- \
-                bash -lc "$command; exec bash" \
-                >/dev/null 2>&1
-        )
+
+        # Kali
+        if [[ "$TARGET" == "kali" ]]; then
+
+            coproc (
+                alacritty \
+                    -e \
+                    distrobox enter \
+                    --name "$CONTAINER" \
+                    -- \
+                    bash -lc "cd ~ && $command; exec bash" \
+                    >/dev/null 2>&1
+            )
+
+
+        # Fedora
+        else
+
+            coproc (
+                alacritty \
+                    -e \
+                    bash -lc "cd ~ && $command; exec bash" \
+                    >/dev/null 2>&1
+            )
+
+        fi
 
         exit 0
         ;;
