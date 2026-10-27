@@ -1,4 +1,3 @@
-eval "$(starship init zsh)"
 export PATH="$HOME/.local/bin:$PATH"
 
 # Zsh history
@@ -35,3 +34,4 @@ if [ -f "$HOME/.dircolors" ]; then
   eval "$(dircolors "$HOME/.dircolors")"
 fi
 
+eval "$(starship init zsh)"

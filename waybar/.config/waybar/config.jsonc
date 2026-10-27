@@ -5,32 +5,32 @@
     "spacing": 15,
 
     "modules-left": [
-        "sway/workspaces",
-        "sway/mode"
+        "hyprland/workspaces",
+        "hyprland/submap"
     ],
     "modules-center": [
-        "sway/window"
+        "hyprland/window"
     ],
     "modules-right": [
         "pulseaudio",
         "network",
-        "battery",
+        // "battery",
         "clock#date",
         "clock#time",
         "tray"
     ],
 
-    "sway/workspaces": {
+    "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": false, // 2画面環境で、その画面にあるワークスペースだけをクリーンに表示
         "format": "{name}"
     },
 
-    "sway/mode": {
+    "hyprland/submap": {
         "format": "[{}]"
     },
 
-    "sway/window": {
+    "hyprland/window": {
         "max-length": 50
     },
 

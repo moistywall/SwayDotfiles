@@ -13,7 +13,7 @@ IMG="$(
 )"
 
 if [ -z "$IMG" ]; then
-  rofi -show winodw
+  rofi -show window
   exit 0
 fi
 

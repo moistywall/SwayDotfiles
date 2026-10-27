@@ -19,7 +19,7 @@ window#waybar {
 }
 
 /* 今見ている（アクティブな）ワークスペース */
-#workspaces button.focused {
+#workspaces button.active {
     color: #ffffff;
     background-color: #2f527a; /* Fedoraブルー風のアクセント */
 }
