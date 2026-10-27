@@ -1,0 +1,100 @@
+# Helix port of pcostasgr/red_alert_vim_theme
+# Original: https://github.com/pcostasgr/red_alert_vim_theme/blob/master/colors/red_alert.vim
+# Vim highlight groups mapped to Helix scopes. Some UI scopes have no direct Vim equivalent.
+
+# --- Syntax --------------------------------------------------------
+"ui.text" = "fg"
+"comment" = "comment_color"
+"constant" = "const_color"
+"constant.builtin" = "const_color"
+"constant.builtin.boolean" = "const_color"
+"constant.numeric" = "const_color"
+"constant.character" = "const_color"
+"string" = "string_color"
+"variable" = { fg = "type_color", modifiers = ["italic"] }
+"variable.parameter" = "var_color"
+"variable.other.member" = "var_color"
+"variable.builtin" = "var_color"
+"function" = "func_color"
+"function.method" = "func_color"
+"function.builtin" = "builtin_color"
+"keyword" = { fg = "keyword_color", modifiers = ["bold"] }
+"keyword.directive" = "keyword_color"
+"keyword.storage" = { fg = "type_color", modifiers = ["italic"] }
+"operator" = "keyword_color"
+"type" = "type_color"
+"constructor" = "type_color"
+"attribute" = "builtin_color"
+"tag" = "keyword_color"
+"namespace" = "type_color"
+"label" = "var_color"
+"special" = "fg"
+"punctuation" = "fg"
+
+# --- Markup --------------------------------------------------------
+"markup.heading" = { fg = "fg", modifiers = ["bold"] }
+"markup.raw" = "builtin_color"
+"markup.link.url" = { fg = "var_color", modifiers = ["underlined"] }
+"markup.link.text" = "var_color"
+"markup.bold" = { modifiers = ["bold"] }
+"markup.italic" = { modifiers = ["italic"] }
+
+# --- Editor UI -----------------------------------------------------
+"ui.background" = { bg = "bg" }
+"ui.cursorline.primary" = { bg = "bg2" }
+"ui.cursorcolumn.primary" = { bg = "bg2" }
+"ui.gutter" = { bg = "bg2" }
+"ui.linenr" = { fg = "fg2", bg = "bg2" }
+"ui.linenr.selected" = { fg = "fg", bg = "bg2", modifiers = ["bold"] }
+"ui.cursor" = { fg = "bg", bg = "fg" }
+"ui.cursor.primary" = { fg = "bg", bg = "fg" }
+"ui.cursor.match" = { fg = "warning2", modifiers = ["underlined"] }
+"ui.statusline" = { fg = "fg2", bg = "bg3", modifiers = ["bold"] }
+"ui.statusline.inactive" = { fg = "fg4", bg = "bg3" }
+"ui.popup" = { fg = "fg", bg = "bg2" }
+"ui.help" = { fg = "fg", bg = "bg2" }
+"ui.menu" = { fg = "fg", bg = "bg2" }
+"ui.menu.selected" = { fg = "fg", bg = "bg3" }
+"ui.text.focus" = { fg = "fg", bg = "bg3" }
+"ui.text.inactive" = "fg4"
+"ui.text.directory" = "const_color"
+"ui.window" = "fg3"
+"ui.selection" = { bg = "bg4" }
+"ui.highlight" = { bg = "bg3" }
+"ui.virtual.whitespace" = "bg4"
+"ui.virtual.indent-guide" = "bg4"
+"ui.virtual.ruler" = { bg = "bg2" }
+
+# --- Diagnostics and diffs ----------------------------------------
+"error" = "warning_color"
+"warning" = "warning2"
+"info" = "type_color"
+"hint" = "comment_color"
+"diagnostic.error" = { underline = { color = "warning_color", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "warning2", style = "curl" } }
+"diff.plus" = { fg = "black", bg = "diff_plus", modifiers = ["bold"] }
+"diff.minus" = "warning_color"
+"diff.delta" = { bg = "bg2" }
+
+[palette]
+bg = "#480007"
+fg = "#ffffff"
+fg2 = "#ebebeb"
+fg3 = "#d6d6d6"
+fg4 = "#c2c2c2"
+bg2 = "#57141b"
+bg3 = "#65292f"
+bg4 = "#743d43"
+keyword_color = "#3e7b78"
+builtin_color = "#f8050c"
+const_color = "#bc844b"
+comment_color = "#808080"
+func_color = "#f8050c"
+string_color = "#fb848c"
+type_color = "#32a7c9"
+var_color = "#cb8996"
+warning_color = "#ff0000"
+warning2 = "#ff8800"
+black = "#000000"
+diff_plus = "#ddffdd"
+

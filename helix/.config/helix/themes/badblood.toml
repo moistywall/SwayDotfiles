@@ -1,0 +1,95 @@
+# badblood.nvimをベースにしたHelix用テーマ
+# https://github.com/Comosaycomosah/badblood.nvim
+
+# ==================================
+# Syntax
+# ==================================
+
+"comment" = { fg = "purple", modifiers = ["italic"] }
+"constant" = "pink"
+"constant.numeric" = "number"
+"constant.builtin.boolean" = "number"
+"string" = "salmon"
+"variable" = "fg"
+"variable.builtin" = { fg = "pink", modifiers = ["bold"] }
+"variable.parameter" = "crimson"
+"variable.other.member" = "crimson"
+"function" = "function_color"
+"function.builtin" = { fg = "function_color", modifiers = ["bold"] }
+"keyword" = "pink"
+"operator" = "fg"
+"type" = "peach"
+"constructor" = "peach"
+"punctuation" = "fg"
+"tag" = "tomato"
+"attribute" = "crimson"
+"namespace" = "peach"
+"special" = "hot_pink"
+
+"markup.heading" = { fg = "pink", modifiers = ["bold"] }
+"markup.raw" = "salmon"
+"markup.link.url" = { fg = "salmon", modifiers = ["underlined"] }
+
+# ==================================
+# UI
+# ==================================
+
+# 原作の不透明な背景を使う場合は有効化
+# "ui.background" = { bg = "bg" }
+
+"ui.text" = "fg"
+"ui.text.focus" = { fg = "white", bg = "selection_bg" }
+"ui.linenr" = "purple"
+"ui.linenr.selected" = { fg = "fg", modifiers = ["bold"] }
+
+"ui.cursor" = { fg = "white", bg = "red" }
+"ui.cursor.primary" = { fg = "white", bg = "red" }
+"ui.cursor.match" = { fg = "red", bg = "black" }
+# "ui.cursorline.primary" = { bg = "black" }
+"ui.background" = { bg = "black" }
+"ui.cursorline.primary" = { bg = "#343b49" }
+
+"ui.selection" = { bg = "selection_bg" }
+"ui.statusline" = { fg = "fg", bg = "black" }
+"ui.statusline.inactive" = { fg = "purple", bg = "black" }
+"ui.popup" = { fg = "fg", bg = "black" }
+"ui.help" = { fg = "fg", bg = "black" }
+"ui.menu" = { fg = "fg", bg = "black" }
+"ui.menu.selected" = { fg = "black", bg = "tomato" }
+"ui.virtual.whitespace" = "purple"
+
+
+
+# ==================================
+# Diagnostics
+# ==================================
+
+"error" = { fg = "red" }
+"warning" = { fg = "orange" }
+"info" = { fg = "salmon" }
+"hint" = { fg = "purple" }
+
+"diagnostic.error" = { underline = { color = "red", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "orange", style = "curl" } }
+
+# ==================================
+# Palette
+# ==================================
+
+[palette]
+bg = "#040000"
+fg = "#FF2222"
+black = "#000000"
+white = "#FFFFFF"
+red = "#FF0000"
+purple = "#800080"
+pink = "#FF69B4"
+hot_pink = "#FF1493"
+salmon = "#FFA07A"
+peach = "#FFC080"
+tomato = "#FF6347"
+crimson = "#DC143C"
+number = "#C51046"
+function_color = "#C71585"
+orange = "#FFA500"
+selection_bg = "#4d0900"

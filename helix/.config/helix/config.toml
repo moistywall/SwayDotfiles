@@ -1,4 +1,4 @@
-theme = "bogster"
+theme = "red_alert"
 
 [editor]
 # line-number = "relative"
@@ -19,3 +19,7 @@ render = true
 
 [editor.lsp]
 display-messages = true
+
+[editor.file-picker]
+hidden = false
+
