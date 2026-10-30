@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+mode="${1:-copy}"
+
+# 撮影範囲を選択（Escでキャンセル）
+geometry="$(slurp)" || exit 0
+[[ -n "$geometry" ]] || exit 0
+
+case "$mode" in
+    copy)
+        grim -g "$geometry" - | wl-copy --type image/png
+        ;;
+    save)
+        dir="$HOME/Pictures/Screenshots"
+        mkdir -p "$dir"
+        grim -g "$geometry" "$dir/$(date +%Y%m%d_%H%M%S).png"
+        ;;
+    edit)
+        grim -g "$geometry" - | swappy -f -
+        ;;
+    *)
+        echo "Usage: screenshot {copy|save|edit}" >&2
+        exit 1
+        ;;
+esac

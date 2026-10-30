@@ -326,6 +326,10 @@ hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 ]]
 
+hl.bind("Print", hl.dsp.exec_cmd("~/.local/bin/screenshot copy"))
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd("~/.local/bin/screenshot save"))
+hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.local/bin/screenshot edit"))
+
 --[[ここもsway向けのままなため調整が必要
 ## 情報出力
 bindsym $mod+i exec ~/.local/bin/info-panel-toggle
